@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
+import SocialChatAndRating from '../components/SocialChatAndRating';
 
-const ArtStyleCard = ({ style, onPurchase }) => (
+const ArtStyleCard = ({ style, onPurchase, onSelect }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden">
     <img src={style.imageUrl} alt={style.title} className="w-full h-64 object-cover" />
     <div className="p-4">
@@ -13,6 +14,7 @@ const ArtStyleCard = ({ style, onPurchase }) => (
         <span className="text-lg font-bold">{style.price} CRYPTO</span>
         <Button onClick={() => onPurchase(style)}>Purchase NFT</Button>
       </div>
+      <Button onClick={() => onSelect(style)} className="mt-2 w-full">View Details</Button>
     </div>
   </div>
 );
@@ -32,6 +34,10 @@ const Marketplace = () => {
     setIsPurchaseModalOpen(true);
   };
 
+  const handleSelectStyle = (style) => {
+    setSelectedStyle(style);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">ArtStyle Marketplace</h1>
@@ -40,9 +46,17 @@ const Marketplace = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {dummyStyles.map((style) => (
-          <ArtStyleCard key={style.id} style={style} onPurchase={handlePurchase} />
+          <ArtStyleCard 
+            key={style.id} 
+            style={style} 
+            onPurchase={handlePurchase}
+            onSelect={handleSelectStyle}
+          />
         ))}
       </div>
+      {selectedStyle && (
+        <SocialChatAndRating styleId={selectedStyle.id} />
+      )}
       <NFTPurchaseModal
         isOpen={isPurchaseModalOpen}
         onClose={() => setIsPurchaseModalOpen(false)}
