@@ -22,6 +22,9 @@ const Navigation = () => {
             <Button asChild variant="outline" className="ml-4">
               <Link to="/login">Login</Link>
             </Button>
+            <Button asChild className="ml-2">
+              <Link to="/signup">Sign Up</Link>
+            </Button>
           </div>
         </div>
       </div>
