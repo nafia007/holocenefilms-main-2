@@ -1,27 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import NFTPurchaseModal from '../components/NFTPurchaseModal';
 
-const ArtStyleCard = ({ title, artist, price, imageUrl }) => (
+const ArtStyleCard = ({ style, onPurchase }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden">
-    <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
+    <img src={style.imageUrl} alt={style.title} className="w-full h-48 object-cover" />
     <div className="p-4">
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="text-sm text-gray-600">by {artist}</p>
+      <h3 className="text-lg font-semibold">{style.title}</h3>
+      <p className="text-sm text-gray-600">by {style.artist}</p>
       <div className="mt-4 flex justify-between items-center">
-        <span className="text-lg font-bold">${price}</span>
-        <Button>Purchase</Button>
+        <span className="text-lg font-bold">{style.price} CRYPTO</span>
+        <Button onClick={() => onPurchase(style)}>Purchase NFT</Button>
       </div>
     </div>
   </div>
 );
 
 const Marketplace = () => {
+  const [selectedStyle, setSelectedStyle] = useState(null);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+
   const dummyStyles = [
-    { id: 1, title: "Vibrant Abstracts", artist: "Jane Doe", price: 49.99, imageUrl: "https://example.com/image1.jpg" },
-    { id: 2, title: "Minimalist Landscapes", artist: "John Smith", price: 39.99, imageUrl: "https://example.com/image2.jpg" },
-    { id: 3, title: "Digital Surrealism", artist: "Alice Johnson", price: 59.99, imageUrl: "https://example.com/image3.jpg" },
+    { id: 1, title: "Vibrant Abstracts", artist: "Jane Doe", price: 0.5, imageUrl: "https://example.com/image1.jpg" },
+    { id: 2, title: "Minimalist Landscapes", artist: "John Smith", price: 0.3, imageUrl: "https://example.com/image2.jpg" },
+    { id: 3, title: "Digital Surrealism", artist: "Alice Johnson", price: 0.7, imageUrl: "https://example.com/image3.jpg" },
   ];
+
+  const handlePurchase = (style) => {
+    setSelectedStyle(style);
+    setIsPurchaseModalOpen(true);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,9 +40,14 @@ const Marketplace = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {dummyStyles.map((style) => (
-          <ArtStyleCard key={style.id} {...style} />
+          <ArtStyleCard key={style.id} style={style} onPurchase={handlePurchase} />
         ))}
       </div>
+      <NFTPurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        artStyle={selectedStyle}
+      />
     </div>
   );
 };
