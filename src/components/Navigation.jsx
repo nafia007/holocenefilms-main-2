@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import ConnectWallet from './ConnectWallet';
 
 const Navigation = () => {
   return (
@@ -25,6 +26,7 @@ const Navigation = () => {
             <Link to="/dex" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">
               Buy StyleTokens
             </Link>
+            <ConnectWallet />
             <Button asChild variant="outline" className="ml-4">
               <Link to="/login">Login</Link>
             </Button>
