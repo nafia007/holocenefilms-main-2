@@ -5,7 +5,7 @@ import NFTPurchaseModal from '../components/NFTPurchaseModal';
 
 const ArtStyleCard = ({ style, onPurchase }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden">
-    <img src={style.imageUrl} alt={style.title} className="w-full h-48 object-cover" />
+    <img src={style.imageUrl} alt={style.title} className="w-full h-64 object-cover" />
     <div className="p-4">
       <h3 className="text-lg font-semibold">{style.title}</h3>
       <p className="text-sm text-gray-600">by {style.artist}</p>
@@ -22,9 +22,9 @@ const Marketplace = () => {
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   const dummyStyles = [
-    { id: 1, title: "Vibrant Abstracts", artist: "Jane Doe", price: 0.5, imageUrl: "https://example.com/image1.jpg" },
-    { id: 2, title: "Minimalist Landscapes", artist: "John Smith", price: 0.3, imageUrl: "https://example.com/image2.jpg" },
-    { id: 3, title: "Digital Surrealism", artist: "Alice Johnson", price: 0.7, imageUrl: "https://example.com/image3.jpg" },
+    { id: 1, title: "Futuristic Warrior", artist: "AI Artist 1", price: 0.5, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
+    { id: 2, title: "Urban Nostalgia", artist: "AI Artist 2", price: 0.3, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
+    { id: 3, title: "Cosmic Ascension", artist: "AI Artist 3", price: 0.7, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
   ];
 
   const handlePurchase = (style) => {
