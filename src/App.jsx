@@ -8,6 +8,7 @@ import ArtistProfile from "./pages/ArtistProfile";
 import Marketplace from "./pages/Marketplace";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/community" element={<Community />} />
           </Routes>
         </Layout>
       </BrowserRouter>
