@@ -22,9 +22,9 @@ const Marketplace = () => {
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   const dummyStyles = [
-    { id: 1, title: "Futuristic Warrior", artist: "AI Artist 1", price: 0.5, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
-    { id: 2, title: "Urban Nostalgia", artist: "AI Artist 2", price: 0.3, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
-    { id: 3, title: "Cosmic Ascension", artist: "AI Artist 3", price: 0.7, imageUrl: "https://i.imgur.com/Ky4Yl0e.png" },
+    { id: 1, title: "Futuristic Warrior", artist: "AI Artist 1", price: 0.5, imageUrl: "/placeholder.svg" },
+    { id: 2, title: "Urban Nostalgia", artist: "AI Artist 2", price: 0.3, imageUrl: "/placeholder.svg" },
+    { id: 3, title: "Cosmic Ascension", artist: "AI Artist 3", price: 0.7, imageUrl: "/placeholder.svg" },
   ];
 
   const handlePurchase = (style) => {
