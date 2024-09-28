@@ -22,6 +22,9 @@ const Navigation = () => {
             <Link to="/community" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">
               Community
             </Link>
+            <Link to="/dex" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">
+              Buy StyleTokens
+            </Link>
             <Button asChild variant="outline" className="ml-4">
               <Link to="/login">Login</Link>
             </Button>
