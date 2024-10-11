@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
 import SocialChatAndRating from '../components/SocialChatAndRating';
+import { getThirdwebContract } from '../utils/thirdwebUtils';
 
 const ArtStyleCard = ({ style, onPurchase, onSelect }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -22,6 +23,15 @@ const ArtStyleCard = ({ style, onPurchase, onSelect }) => (
 const Marketplace = () => {
   const [selectedStyle, setSelectedStyle] = useState(null);
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [contract, setContract] = useState(null);
+
+  useEffect(() => {
+    const initContract = async () => {
+      const thirdwebContract = await getThirdwebContract();
+      setContract(thirdwebContract);
+    };
+    initContract();
+  }, []);
 
   const dummyStyles = [
     { id: 1, title: "Futuristic Warrior", artist: "AI Artist 1", price: 0.5, imageUrl: "/placeholder.svg" },
