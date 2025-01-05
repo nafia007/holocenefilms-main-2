@@ -14,7 +14,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
-          <h1 className="text-6xl font-bold text-white mb-6">Welcome to ArtStyleAI</h1>
+          <h1 className="text-6xl font-bold text-white mb-6">Welcome to Holocene Films IP marketplace</h1>
           <p className="text-xl text-white mb-8">
             Revolutionizing the intersection of traditional fine art and artificial intelligence
           </p>
