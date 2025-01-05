@@ -17,16 +17,16 @@ const Navigation = () => {
           </div>
           <div className="flex items-center space-x-4">
             <Link to="/marketplace" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Marketplace
+              Film Market
             </Link>
             <Link to="/artist-profile" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Artist Profile
+              Filmmaker Profile
             </Link>
             <Link to="/community" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Community
             </Link>
             <Link to="/dex" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Buy StyleTokens
+              Buy FilmTokens
             </Link>
             <ConnectWallet />
             <Button asChild variant="outline" className="border-purple-500 text-purple-400 hover:bg-purple-500/10">
