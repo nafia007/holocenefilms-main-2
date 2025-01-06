@@ -5,19 +5,19 @@ import { toast } from 'sonner';
 
 const Dex = () => {
   const [ethAmount, setEthAmount] = useState('');
-  const [styleTokenAmount, setStyleTokenAmount] = useState('');
+  const [holoceneTokenAmount, setHoloceneTokenAmount] = useState('');
 
   const handleExchange = () => {
-    // Mock exchange rate: 1 ETH = 100 StyleTokens
+    // Mock exchange rate: 1 ETH = 100 HoloceneTokens
     const exchangeRate = 100;
-    const calculatedStyleTokens = parseFloat(ethAmount) * exchangeRate;
-    setStyleTokenAmount(calculatedStyleTokens.toFixed(2));
-    toast.success(`Successfully exchanged ${ethAmount} ETH for ${calculatedStyleTokens.toFixed(2)} StyleTokens`);
+    const calculatedHoloceneTokens = parseFloat(ethAmount) * exchangeRate;
+    setHoloceneTokenAmount(calculatedHoloceneTokens.toFixed(2));
+    toast.success(`Successfully exchanged ${ethAmount} ETH for ${calculatedHoloceneTokens.toFixed(2)} HoloceneTokens`);
   };
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Buy StyleTokens</h2>
+      <h2 className="text-2xl font-bold mb-4">Buy HoloceneTokens</h2>
       <div className="space-y-4">
         <div>
           <label htmlFor="ethAmount" className="block text-sm font-medium text-gray-700">ETH Amount</label>
@@ -30,13 +30,13 @@ const Dex = () => {
           />
         </div>
         <div>
-          <label htmlFor="styleTokenAmount" className="block text-sm font-medium text-gray-700">StyleTokens to Receive</label>
+          <label htmlFor="holoceneTokenAmount" className="block text-sm font-medium text-gray-700">HoloceneTokens to Receive</label>
           <Input
             type="text"
-            id="styleTokenAmount"
-            value={styleTokenAmount}
+            id="holoceneTokenAmount"
+            value={holoceneTokenAmount}
             readOnly
-            placeholder="StyleTokens you'll receive"
+            placeholder="HoloceneTokens you'll receive"
           />
         </div>
         <Button onClick={handleExchange} className="w-full">
@@ -44,7 +44,7 @@ const Dex = () => {
         </Button>
       </div>
       <p className="mt-4 text-sm text-gray-600">
-        Exchange Rate: 1 ETH = 100 StyleTokens
+        Exchange Rate: 1 ETH = 100 HoloceneTokens
       </p>
     </div>
   );
