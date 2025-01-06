@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import ArtistProfile from "./pages/ArtistProfile";
+import AdminDashboard from "./pages/AdminDashboard";
 import Marketplace from "./pages/Marketplace";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -23,7 +23,7 @@ const App = () => (
           <Layout>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/artist-profile" element={<ArtistProfile />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />

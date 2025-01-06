@@ -19,8 +19,8 @@ const Navigation = () => {
             <Link to="/marketplace" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Film Market
             </Link>
-            <Link to="/artist-profile" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Filmmaker Profile
+            <Link to="/admin" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              Admin Dashboard
             </Link>
             <Link to="/community" className="text-purple-200 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Community
