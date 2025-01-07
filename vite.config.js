@@ -25,4 +25,22 @@ export default defineConfig(({ mode }) => ({
       },
     ],
   },
+  build: {
+    rollupOptions: {
+      // Properly handle pure annotations
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+      },
+    },
+    // Increase memory limit
+    chunkSizeWarningLimit: 1000,
+    // Handle browser compatibility
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
+  optimizeDeps: {
+    exclude: ['ox'], // Exclude problematic package from optimization
+  },
 }));
