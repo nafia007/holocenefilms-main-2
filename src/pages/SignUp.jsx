@@ -12,7 +12,7 @@ const SignUp = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Sign Up for ArtStyleAI</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Sign Up for Holocene Films IP marketplace</h1>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
