@@ -17,6 +17,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
@@ -26,7 +27,7 @@ const App = () => {
     <ThirdwebProvider clientId="61c6a87659a28faeff906ed86e7ab9cb">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
+          <Toaster position="top-right" />
           <BrowserRouter>
             <Layout>
               <Routes>

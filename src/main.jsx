@@ -7,7 +7,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 // Add error boundary at the root level
 try {
   root.render(
-    <App />
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
   );
 } catch (error) {
   console.error("Error rendering application:", error);
