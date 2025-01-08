@@ -12,29 +12,38 @@ import SignUp from "./pages/SignUp";
 import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-const App = () => (
-  <ThirdwebProvider clientId="61c6a87659a28faeff906ed86e7ab9cb">
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/dex" element={<DexPage />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThirdwebProvider>
-);
+const App = () => {
+  return (
+    <ThirdwebProvider clientId="61c6a87659a28faeff906ed86e7ab9cb">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <BrowserRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/dex" element={<DexPage />} />
+              </Routes>
+            </Layout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThirdwebProvider>
+  );
+};
 
 export default App;
