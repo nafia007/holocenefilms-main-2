@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 // Store trusted origins
 const TRUSTED_ORIGINS = [
   window.location.origin,
-  'https://lovableproject.com',
+  'https://lovable.dev',
   'https://*.lovableproject.com'
 ];
 
@@ -38,6 +38,7 @@ if (window.parent !== window) {
 
 // Message handler with origin validation
 window.addEventListener('message', (event) => {
+  // Log received message origin for debugging
   console.log('Received message from:', event.origin);
   
   // Validate message origin
@@ -81,15 +82,15 @@ try {
 } catch (error) {
   console.error("Error rendering application:", error);
   
+  // If running in iframe, try to send error to parent
   if (window.parent !== window) {
     try {
-      const trustedParentOrigin = window.parent.location.origin;
       window.parent.postMessage({
         type: 'ERROR',
         error: error.message,
         timestamp: new Date().toISOString(),
         origin: window.location.origin
-      }, trustedParentOrigin);
+      }, '*');
     } catch (postMessageError) {
       console.error('Failed to send error to parent:', postMessageError);
       // Fallback to showing error UI
