@@ -1,19 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
 
 // Store trusted origins
 const TRUSTED_ORIGINS = [
   window.location.origin,
-  'https://lovable.dev',
-  'https://*.lovableproject.com'
+  'https://holocenefilms.dev',
+  'https://*.holocenefilms.com'
 ];
 
-// Helper function to check if an origin is trusted
-const isTrustedOrigin = (origin) => {
+// Helper function to validate origin
+const isOriginTrusted = (origin) => {
   return TRUSTED_ORIGINS.some(trusted => {
     if (trusted.includes('*')) {
       const pattern = trusted.replace('*', '.*');
@@ -23,16 +21,17 @@ const isTrustedOrigin = (origin) => {
   });
 };
 
-// Initialize communication with parent if in iframe
+// Initialize communication with parent if running in iframe
 if (window.parent !== window) {
-  console.log('Running in iframe, initializing communication...');
+  console.log('Running in iframe, initializing communication');
   try {
     window.parent.postMessage({
       type: 'INIT',
+      timestamp: new Date().toISOString(),
       origin: window.location.origin
     }, '*');
   } catch (error) {
-    console.error('Failed to send init message:', error);
+    console.error('Failed to send INIT message:', error);
   }
 }
 
@@ -42,39 +41,31 @@ window.addEventListener('message', (event) => {
   console.log('Received message from:', event.origin);
   
   // Validate message origin
-  if (!isTrustedOrigin(event.origin)) {
-    console.warn('Message received from untrusted origin:', event.origin);
-    return;
-  }
-
-  // Validate message structure
-  if (!event.data || typeof event.data !== 'object') {
-    console.warn('Invalid message format received');
+  if (!isOriginTrusted(event.origin)) {
+    console.error('Message received from untrusted origin:', event.origin);
     return;
   }
 
   // Handle different message types
-  switch (event.data.type) {
-    case 'INIT':
-      console.log('Initialization request received');
-      event.source?.postMessage({
-        type: 'READY',
-        origin: window.location.origin,
-        timestamp: new Date().toISOString()
-      }, event.origin);
-      break;
-      
-    case 'READY':
-      console.log('Ready confirmation received');
-      break;
-      
-    default:
-      console.log('Unhandled message type:', event.data.type);
+  try {
+    const message = event.data;
+    
+    switch (message.type) {
+      case 'READY':
+        console.log('Parent window is ready');
+        break;
+      // Add more message type handlers as needed
+      default:
+        console.log('Received message:', message);
+    }
+  } catch (error) {
+    console.error('Error processing message:', error);
   }
 });
 
+// Render the application
 try {
-  root.render(
+  ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
@@ -94,20 +85,6 @@ try {
     } catch (postMessageError) {
       console.error('Failed to send error to parent:', postMessageError);
       // Fallback to showing error UI
-      root.render(
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] to-[#221F26] text-white p-4">
-          <div className="text-center max-w-md">
-            <h1 className="text-2xl font-bold mb-4">Unable to Load Application</h1>
-            <p className="text-gray-300 mb-4">We're experiencing technical difficulties. Please try again later.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded transition-colors"
-            >
-              Refresh Page
-            </button>
-          </div>
-        </div>
-      );
     }
   }
 }
