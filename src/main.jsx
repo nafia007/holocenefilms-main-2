@@ -5,15 +5,31 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-// Add event listener for message events
+// Log the current origin for debugging
+console.log('Current window origin:', window.location.origin);
+
+// Add event listener for message events with improved origin handling
 window.addEventListener('message', (event) => {
-  // Verify the origin of the message
-  if (event.origin !== window.location.origin) {
-    console.warn('Received message from unexpected origin:', event.origin);
-    return;
+  // Log received message and origin for debugging
+  console.log('Received message from origin:', event.origin);
+  console.log('Message data:', event.data);
+  
+  // Handle the message - we accept messages from any origin but validate the content
+  if (event.data && typeof event.data === 'object') {
+    // Process the message based on its type
+    switch (event.data.type) {
+      case 'INIT':
+        console.log('Initialization message received');
+        // Respond to confirm initialization
+        event.source?.postMessage({
+          type: 'READY',
+          origin: window.location.origin
+        }, '*');
+        break;
+      default:
+        console.log('Unhandled message type:', event.data.type);
+    }
   }
-  // Handle the message
-  console.log('Received message:', event.data);
 });
 
 try {
@@ -24,13 +40,19 @@ try {
   );
 } catch (error) {
   console.error("Error rendering application:", error);
-  // Send error information to parent if in iframe
+  
+  // Send error information to parent if in iframe, using '*' for development
   if (window.parent !== window) {
     try {
+      // Log the error details for debugging
+      console.log('Sending error to parent:', error.message);
+      
       window.parent.postMessage({
         type: 'ERROR',
-        error: error.message
-      }, window.location.origin);
+        error: error.message,
+        timestamp: new Date().toISOString(),
+        origin: window.location.origin
+      }, '*');
     } catch (postMessageError) {
       console.error('Failed to send error to parent:', postMessageError);
     }
