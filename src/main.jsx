@@ -5,6 +5,17 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+// Add event listener for message events
+window.addEventListener('message', (event) => {
+  // Verify the origin of the message
+  if (event.origin !== window.location.origin) {
+    console.warn('Received message from unexpected origin:', event.origin);
+    return;
+  }
+  // Handle the message
+  console.log('Received message:', event.data);
+});
+
 try {
   root.render(
     <React.StrictMode>
@@ -13,6 +24,18 @@ try {
   );
 } catch (error) {
   console.error("Error rendering application:", error);
+  // Send error information to parent if in iframe
+  if (window.parent !== window) {
+    try {
+      window.parent.postMessage({
+        type: 'ERROR',
+        error: error.message
+      }, window.location.origin);
+    } catch (postMessageError) {
+      console.error('Failed to send error to parent:', postMessageError);
+    }
+  }
+  
   root.render(
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] to-[#221F26] text-white p-4">
       <div className="text-center max-w-md">
