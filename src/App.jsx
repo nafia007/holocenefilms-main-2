@@ -17,17 +17,19 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
 
 const App = () => {
+  console.log("App component rendering"); // Added for debugging
+
   return (
     <ThirdwebProvider clientId="61c6a87659a28faeff906ed86e7ab9cb">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster position="top-right" />
+          <Toaster position="top-right" richColors closeButton />
           <BrowserRouter>
             <Layout>
               <Routes>
