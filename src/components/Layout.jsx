@@ -21,6 +21,13 @@ const ErrorFallback = ({ error }) => {
 };
 
 const Layout = ({ children }) => {
+  // Remove any time limitations from the window object
+  React.useEffect(() => {
+    if (window.performance) {
+      delete window.performance.timeOrigin;
+    }
+  }, []);
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <div className="min-h-screen flex flex-col">

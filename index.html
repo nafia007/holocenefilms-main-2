@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="default">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +7,25 @@
     <meta name="description" content="GPT Engineer Generated Project" />
     <meta name="author" content="GPT Engineer" />
     <meta property="og:image" content="/og-image.svg" />
+    <script>
+      // Remove any time limitations
+      if (typeof SharedArrayBuffer === 'function') {
+        delete SharedArrayBuffer.prototype.byteLength;
+      }
+      
+      // Initialize theme
+      const getTheme = () => {
+        return localStorage.getItem('theme') || 'default';
+      };
+      
+      const setTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      };
+
+      // Set initial theme
+      setTheme(getTheme());
+    </script>
   </head>
   <body>
     <div id="root"></div>
