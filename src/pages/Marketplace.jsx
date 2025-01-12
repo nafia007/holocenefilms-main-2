@@ -8,8 +8,14 @@ import { Search, Filter, SortAsc } from "lucide-react";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
 import SocialChatAndRating from '../components/SocialChatAndRating';
 import { getThirdwebContract } from '../utils/thirdwebUtils';
+import { ConnectButton } from "@thirdweb-dev/react";
+import { createThirdwebClient } from "thirdweb";
 
-const FilmCard = ({ film, onPurchase, onSelect }) => (
+const client = createThirdwebClient({
+  clientId: "61c6a87659a28faeff906ed86e7ab9cb"
+});
+
+const FilmCard = ({ film, onPurchase, onSelect, onMint }) => (
   <Card className="w-full transition-all hover:shadow-lg">
     <CardHeader>
       <CardTitle className="text-lg">{film.title}</CardTitle>
@@ -29,6 +35,7 @@ const FilmCard = ({ film, onPurchase, onSelect }) => (
         <div className="space-x-2">
           <Button variant="outline" onClick={() => onSelect(film)}>Details</Button>
           <Button onClick={() => onPurchase(film)}>Purchase NFT</Button>
+          <Button onClick={() => onMint(film)} variant="secondary">Mint NFT</Button>
         </div>
       </div>
     </CardContent>
@@ -64,6 +71,50 @@ const Marketplace = () => {
     };
     initContract();
   }, [toast]);
+
+  const handleMint = async (film) => {
+    try {
+      if (!contract) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please connect your wallet first",
+        });
+        return;
+      }
+
+      // Call the contract's mint function
+      const tx = await contract.erc721.mint({
+        name: film.title,
+        description: film.description,
+        image: film.imageUrl,
+        properties: {
+          filmmaker: film.filmmaker,
+          price: film.price
+        }
+      });
+
+      toast({
+        title: "NFT Minting Started",
+        description: "Your NFT is being minted. Please wait for confirmation.",
+      });
+
+      // Wait for the transaction to be confirmed
+      const receipt = await tx.wait();
+
+      toast({
+        title: "Success!",
+        description: `NFT minted successfully! Transaction hash: ${receipt.transactionHash}`,
+      });
+    } catch (error) {
+      console.error('Minting error:', error);
+      toast({
+        variant: "destructive",
+        title: "Minting Failed",
+        description: error.message || "Failed to mint NFT. Please try again.",
+      });
+    }
+  };
 
   const dummyFilms = [
     {
@@ -128,6 +179,9 @@ const Marketplace = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold">Film IP Marketplace</h1>
+        <div className="flex items-center gap-4">
+          <ConnectButton client={client} />
+        </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -173,6 +227,7 @@ const Marketplace = () => {
             film={film} 
             onPurchase={handlePurchase}
             onSelect={handleSelectFilm}
+            onMint={handleMint}
           />
         ))}
       </div>
