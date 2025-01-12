@@ -41,37 +41,48 @@ const Community = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Filmmaker Community</h1>
+      <h1 className="text-4xl font-bold mb-8 text-white">Filmmaker Community</h1>
       <div className="mb-8">
         <form onSubmit={handlePostSubmit} className="space-y-4">
           <Textarea
             value={newPost}
             onChange={(e) => setNewPost(e.target.value)}
             placeholder="Share your thoughts or ask for collaboration..."
-            className="w-full"
+            className="w-full bg-white/10 text-white placeholder:text-gray-400"
           />
-          <Button type="submit">Post</Button>
+          <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white">Post</Button>
         </form>
       </div>
       <div className="space-y-6">
         {posts.map((post) => (
-          <div key={post.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div key={post.id} className="bg-white/10 backdrop-blur-lg p-6 rounded-lg shadow-xl border border-purple-500/20">
             <div className="flex justify-between items-start">
-              <h3 className="font-semibold">{post.author}</h3>
+              <h3 className="font-semibold text-purple-300">{post.author}</h3>
               {isAdmin && (
                 <Button 
                   variant="destructive" 
                   size="sm"
                   onClick={() => handleDeletePost(post.id)}
+                  className="bg-red-600 hover:bg-red-700"
                 >
                   Delete
                 </Button>
               )}
             </div>
-            <p className="mt-2">{post.content}</p>
-            <div className="mt-4 flex items-center">
-              <Button variant="outline" size="sm">Like ({post.likes})</Button>
-              <Input type="text" placeholder="Add a comment..." className="ml-4 flex-grow" />
+            <p className="mt-2 text-white/90">{post.content}</p>
+            <div className="mt-4 flex items-center gap-4">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
+              >
+                Like ({post.likes})
+              </Button>
+              <Input 
+                type="text" 
+                placeholder="Add a comment..." 
+                className="flex-grow bg-white/5 border-purple-500/30 text-white placeholder:text-gray-400"
+              />
             </div>
           </div>
         ))}
