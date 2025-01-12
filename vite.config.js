@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => ({
         moduleSideEffects: false,
         propertyReadSideEffects: false,
       },
+      external: ['stream', 'http', 'https', 'zlib'], // Externalize problematic Node.js modules
     },
     // Increase memory limit
     chunkSizeWarningLimit: 1000,

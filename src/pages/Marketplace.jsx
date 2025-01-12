@@ -8,7 +8,7 @@ import { Search, Filter, SortAsc } from "lucide-react";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
 import SocialChatAndRating from '../components/SocialChatAndRating';
 import { getThirdwebContract } from '../utils/thirdwebUtils';
-import { ConnectButton } from "@thirdweb-dev/react";
+import { ThirdwebProvider, ConnectWallet } from "@thirdweb-dev/react";
 import { createThirdwebClient } from "thirdweb";
 
 const client = createThirdwebClient({
@@ -176,75 +176,77 @@ const Marketplace = () => {
     });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <h1 className="text-4xl font-bold">Film IP Marketplace</h1>
-        <div className="flex items-center gap-4">
-          <ConnectButton client={client} />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="relative flex-1 sm:flex-none">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <Input
-              type="text"
-              placeholder="Search films..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full"
-            />
+    <ThirdwebProvider client={client}>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h1 className="text-4xl font-bold">Film IP Marketplace</h1>
+          <div className="flex items-center gap-4">
+            <ConnectWallet />
           </div>
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[180px]">
-              <SortAsc className="w-4 h-4 mr-2" />
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recent">Most Recent</SelectItem>
-              <SelectItem value="price-asc">Price: Low to High</SelectItem>
-              <SelectItem value="price-desc">Price: High to Low</SelectItem>
-              <SelectItem value="title">Title</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={filterBy} onValueChange={setFilterBy}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="w-4 h-4 mr-2" />
-              <SelectValue placeholder="Filter by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-              <SelectItem value="drama">Drama</SelectItem>
-              <SelectItem value="documentary">Documentary</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <div className="relative flex-1 sm:flex-none">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Input
+                type="text"
+                placeholder="Search films..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 w-full"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px]">
+                <SortAsc className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                <SelectItem value="title">Title</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filterBy} onValueChange={setFilterBy}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filter by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
+                <SelectItem value="drama">Drama</SelectItem>
+                <SelectItem value="documentary">Documentary</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredAndSortedFilms.map((film) => (
-          <FilmCard 
-            key={film.id} 
-            film={film} 
-            onPurchase={handlePurchase}
-            onSelect={handleSelectFilm}
-            onMint={handleMint}
-          />
-        ))}
-      </div>
-
-      {selectedFilm && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Community Discussion</h2>
-          <SocialChatAndRating styleId={selectedFilm.id} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredAndSortedFilms.map((film) => (
+            <FilmCard 
+              key={film.id} 
+              film={film} 
+              onPurchase={handlePurchase}
+              onSelect={handleSelectFilm}
+              onMint={handleMint}
+            />
+          ))}
         </div>
-      )}
 
-      <NFTPurchaseModal
-        isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
-        artStyle={selectedFilm}
-      />
-    </div>
+        {selectedFilm && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Community Discussion</h2>
+            <SocialChatAndRating styleId={selectedFilm.id} />
+          </div>
+        )}
+
+        <NFTPurchaseModal
+          isOpen={isPurchaseModalOpen}
+          onClose={() => setIsPurchaseModalOpen(false)}
+          artStyle={selectedFilm}
+        />
+      </div>
+    </ThirdwebProvider>
   );
 };
 
