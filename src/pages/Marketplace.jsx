@@ -27,6 +27,9 @@ const FilmCard = ({ film, onPurchase, onSelect, onMint }) => (
           src={film.imageUrl} 
           alt={film.title} 
           className="absolute inset-0 w-full h-full object-cover rounded-md"
+          onError={(e) => {
+            e.target.src = "/placeholder.svg"; // Fallback to local placeholder
+          }}
         />
       </div>
       <p className="text-sm text-gray-600 mb-4">{film.description}</p>
@@ -122,7 +125,7 @@ const Marketplace = () => {
       title: "The Last Journey",
       filmmaker: "Director 1",
       price: 0.5,
-      imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      imageUrl: "/placeholder.svg", // Using local placeholder
       description: "A groundbreaking sci-fi adventure that pushes the boundaries of visual storytelling.",
       category: "sci-fi"
     },
@@ -131,7 +134,7 @@ const Marketplace = () => {
       title: "Urban Tales",
       filmmaker: "Director 2",
       price: 0.3,
-      imageUrl: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+      imageUrl: "/placeholder.svg", // Using local placeholder
       description: "A collection of interconnected stories exploring modern city life.",
       category: "drama"
     },
@@ -140,7 +143,7 @@ const Marketplace = () => {
       title: "Beyond Tomorrow",
       filmmaker: "Director 3",
       price: 0.7,
-      imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      imageUrl: "/placeholder.svg", // Using local placeholder
       description: "An innovative documentary about future technologies and their impact.",
       category: "documentary"
     },
