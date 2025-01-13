@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
+import MarketInsights from "./pages/MarketInsights";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +41,7 @@ const App = () => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/dex" element={<DexPage />} />
+                <Route path="/market-insights" element={<MarketInsights />} />
               </Routes>
             </Layout>
           </BrowserRouter>
