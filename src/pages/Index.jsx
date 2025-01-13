@@ -89,7 +89,7 @@ const Index = () => {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-purple-900/30 border-purple-500/20">
+            <Card key={index} className="bg-white/10 backdrop-blur-lg border-purple-500/20">
               <CardHeader>
                 <div className="mb-2 text-purple-400">{feature.icon}</div>
                 <CardTitle className="text-purple-200">{feature.title}</CardTitle>
@@ -102,14 +102,14 @@ const Index = () => {
         </div>
 
         {/* Tokenization Process */}
-        <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-lg p-8 rounded-xl shadow-2xl border border-purple-500/20 mb-16">
+        <div className="bg-white/10 backdrop-blur-lg p-8 rounded-xl shadow-2xl border border-purple-500/20 mb-16">
           <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
             Film IP Tokenization Process
           </h2>
           <ScrollArea className="h-[400px] rounded-md border border-purple-500/20 p-4">
             <Accordion type="single" collapsible className="w-full">
               {tokenizationSteps.map((step, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionItem key={index} value={`item-${index}`} className="border-purple-500/20">
                   <AccordionTrigger className="text-purple-300 hover:text-purple-200">
                     {step.title}
                   </AccordionTrigger>
@@ -123,12 +123,12 @@ const Index = () => {
         </div>
 
         {/* Real World Assets Section */}
-        <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-lg p-8 rounded-xl shadow-2xl border border-purple-500/20">
+        <div className="bg-white/10 backdrop-blur-lg p-8 rounded-xl shadow-2xl border border-purple-500/20">
           <h2 className="text-2xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
             The Future of Film Investment
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="bg-purple-800/20 border-purple-500/20">
+            <Card className="bg-white/10 backdrop-blur-lg border-purple-500/20">
               <CardHeader>
                 <CardTitle className="text-purple-200">Real World Assets (RWA)</CardTitle>
                 <CardDescription className="text-purple-300">
@@ -137,7 +137,7 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
             </Card>
-            <Card className="bg-purple-800/20 border-purple-500/20">
+            <Card className="bg-white/10 backdrop-blur-lg border-purple-500/20">
               <CardHeader>
                 <CardTitle className="text-purple-200">Institutional Integration</CardTitle>
                 <CardDescription className="text-purple-300">
