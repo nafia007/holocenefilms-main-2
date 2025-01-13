@@ -13,6 +13,7 @@ import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 import MarketInsights from "./pages/MarketInsights";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -23,12 +24,18 @@ const queryClient = new QueryClient({
   },
 });
 
+// ThirdWeb client configuration
+const thirdwebConfig = {
+  clientId: "61c6a87659a28faeff906ed86e7ab9cb",
+  activeChain: "polygon",
+};
+
 const App = () => {
   console.log("App component rendering"); // Added for debugging
 
   return (
-    <ThirdwebProvider clientId="61c6a87659a28faeff906ed86e7ab9cb">
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ThirdwebProvider {...thirdwebConfig}>
         <TooltipProvider>
           <Toaster position="top-right" richColors closeButton />
           <BrowserRouter>
@@ -46,8 +53,8 @@ const App = () => {
             </Layout>
           </BrowserRouter>
         </TooltipProvider>
-      </QueryClientProvider>
-    </ThirdwebProvider>
+      </ThirdwebProvider>
+    </QueryClientProvider>
   );
 };
 

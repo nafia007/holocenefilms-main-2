@@ -8,12 +8,7 @@ import { Search, Filter, SortAsc } from "lucide-react";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
 import SocialChatAndRating from '../components/SocialChatAndRating';
 import { getThirdwebContract } from '../utils/thirdwebUtils';
-import { ThirdwebProvider, ConnectWallet } from "@thirdweb-dev/react";
-import { createThirdwebClient } from "thirdweb";
-
-const client = createThirdwebClient({
-  clientId: "61c6a87659a28faeff906ed86e7ab9cb"
-});
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 const FilmCard = ({ film, onPurchase, onSelect, onMint }) => (
   <Card className="w-full transition-all hover:shadow-lg">
@@ -25,7 +20,11 @@ const FilmCard = ({ film, onPurchase, onSelect, onMint }) => (
       <div className="relative h-48 w-full mb-4">
         <img 
           src={film.imageUrl} 
-          alt={film.title} 
+          alt={film.title}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/placeholder.svg";
+          }}
           className="absolute inset-0 w-full h-full object-cover rounded-md"
         />
       </div>
@@ -122,7 +121,7 @@ const Marketplace = () => {
       title: "The Last Journey",
       filmmaker: "Director 1",
       price: 0.5,
-      imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      imageUrl: "/placeholder.svg",
       description: "A groundbreaking sci-fi adventure that pushes the boundaries of visual storytelling.",
       category: "sci-fi"
     },
@@ -131,7 +130,7 @@ const Marketplace = () => {
       title: "Urban Tales",
       filmmaker: "Director 2",
       price: 0.3,
-      imageUrl: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+      imageUrl: "/placeholder.svg",
       description: "A collection of interconnected stories exploring modern city life.",
       category: "drama"
     },
@@ -140,7 +139,7 @@ const Marketplace = () => {
       title: "Beyond Tomorrow",
       filmmaker: "Director 3",
       price: 0.7,
-      imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      imageUrl: "/placeholder.svg",
       description: "An innovative documentary about future technologies and their impact.",
       category: "documentary"
     },
@@ -176,77 +175,75 @@ const Marketplace = () => {
     });
 
   return (
-    <ThirdwebProvider client={client}>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-4xl font-bold">Film IP Marketplace</h1>
-          <div className="flex items-center gap-4">
-            <ConnectWallet />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <div className="relative flex-1 sm:flex-none">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <Input
-                type="text"
-                placeholder="Search films..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-full"
-              />
-            </div>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px]">
-                <SortAsc className="w-4 h-4 mr-2" />
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recent">Most Recent</SelectItem>
-                <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                <SelectItem value="title">Title</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterBy} onValueChange={setFilterBy}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue placeholder="Filter by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                <SelectItem value="drama">Drama</SelectItem>
-                <SelectItem value="documentary">Documentary</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-4xl font-bold">Film IP Marketplace</h1>
+        <div className="flex items-center gap-4">
+          <ConnectWallet />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredAndSortedFilms.map((film) => (
-            <FilmCard 
-              key={film.id} 
-              film={film} 
-              onPurchase={handlePurchase}
-              onSelect={handleSelectFilm}
-              onMint={handleMint}
+        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+          <div className="relative flex-1 sm:flex-none">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Input
+              type="text"
+              placeholder="Search films..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 w-full"
             />
-          ))}
-        </div>
-
-        {selectedFilm && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Community Discussion</h2>
-            <SocialChatAndRating styleId={selectedFilm.id} />
           </div>
-        )}
-
-        <NFTPurchaseModal
-          isOpen={isPurchaseModalOpen}
-          onClose={() => setIsPurchaseModalOpen(false)}
-          artStyle={selectedFilm}
-        />
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-[180px]">
+              <SortAsc className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="price-asc">Price: Low to High</SelectItem>
+              <SelectItem value="price-desc">Price: High to Low</SelectItem>
+              <SelectItem value="title">Title</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={filterBy} onValueChange={setFilterBy}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Filter by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="sci-fi">Sci-Fi</SelectItem>
+              <SelectItem value="drama">Drama</SelectItem>
+              <SelectItem value="documentary">Documentary</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
-    </ThirdwebProvider>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredAndSortedFilms.map((film) => (
+          <FilmCard 
+            key={film.id} 
+            film={film} 
+            onPurchase={handlePurchase}
+            onSelect={handleSelectFilm}
+            onMint={handleMint}
+          />
+        ))}
+      </div>
+
+      {selectedFilm && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Community Discussion</h2>
+          <SocialChatAndRating styleId={selectedFilm.id} />
+        </div>
+      )}
+
+      <NFTPurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        artStyle={selectedFilm}
+      />
+    </div>
   );
 };
 
