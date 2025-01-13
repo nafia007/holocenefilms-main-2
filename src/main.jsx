@@ -35,9 +35,9 @@ if (window.parent !== window) {
           timestamp: new Date().toISOString(),
           origin: CURRENT_ORIGIN
         }
-      }, '*'); // Using * initially for handshake only
+      }, window.parent.origin || '*');
       
-      console.log('Initialization message sent to parent');
+      console.log('Initialization message sent to parent:', window.parent.origin);
     } catch (error) {
       console.error('Failed to send initialization message:', error);
     }
@@ -68,19 +68,11 @@ if (window.parent !== window) {
         case 'PARENT_READY':
           console.log('Parent window acknowledged connection');
           window.__IFRAME_READY = true;
-          // Now we can use the validated origin for future communications
-          window.__PARENT_ORIGIN = event.origin;
           break;
           
         case 'PARENT_COMMAND':
           console.log('Received command from parent:', payload);
-          // Handle specific commands here using the validated origin
-          if (window.__PARENT_ORIGIN) {
-            window.parent.postMessage({
-              type: 'COMMAND_RESPONSE',
-              payload: { status: 'success' }
-            }, window.__PARENT_ORIGIN);
-          }
+          // Handle specific commands here
           break;
           
         default:
@@ -88,13 +80,6 @@ if (window.parent !== window) {
       }
     } catch (error) {
       console.error('Error processing message:', error);
-      // Report error to parent if we have a validated origin
-      if (window.__PARENT_ORIGIN) {
-        window.parent.postMessage({
-          type: 'ERROR',
-          payload: { error: error.message }
-        }, window.__PARENT_ORIGIN);
-      }
     }
   });
 }
@@ -110,13 +95,17 @@ try {
   console.error('Error rendering application:', error);
   
   // Report error to parent if running in iframe
-  if (window.parent !== window && window.__PARENT_ORIGIN) {
-    window.parent.postMessage({
-      type: 'IFRAME_ERROR',
-      payload: {
-        error: error.message,
-        timestamp: new Date().toISOString()
-      }
-    }, window.__PARENT_ORIGIN);
+  if (window.parent !== window) {
+    try {
+      window.parent.postMessage({
+        type: 'IFRAME_ERROR',
+        payload: {
+          error: error.message,
+          timestamp: new Date().toISOString()
+        }
+      }, window.parent.origin || '*');
+    } catch (postMessageError) {
+      console.error('Failed to send error to parent:', postMessageError);
+    }
   }
 }
