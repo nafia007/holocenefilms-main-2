@@ -31,8 +31,6 @@ const thirdwebConfig = {
 };
 
 const App = () => {
-  console.log("App component rendering"); // Added for debugging
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdwebProvider {...thirdwebConfig}>
