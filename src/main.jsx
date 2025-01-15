@@ -14,39 +14,45 @@ const TRUSTED_ORIGINS = [
   'https://admin.holocenefilms.dev',
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://*.lovableproject.com'  // Add wildcard for lovable domains
+  'https://*.lovableproject.com'
 ];
 
 // Enhanced origin validation with wildcard support
 const isOriginTrusted = (origin) => {
   if (!origin) return false;
-  
-  // Check exact matches first
-  if (TRUSTED_ORIGINS.includes(origin)) return true;
-  
-  // Check wildcard matches
   return TRUSTED_ORIGINS.some(trusted => {
     if (trusted.includes('*')) {
       const pattern = trusted.replace('*', '.*');
-      const regex = new RegExp(pattern);
-      return regex.test(origin);
+      return new RegExp(pattern).test(origin);
     }
-    return false;
+    return trusted === origin;
   });
+};
+
+// Handle URL changes
+const handleUrlChange = (newUrl) => {
+  if (window.history && window.history.pushState) {
+    window.history.pushState({}, '', newUrl);
+    // Dispatch a custom event to notify the application of URL change
+    window.dispatchEvent(new CustomEvent('locationchange', { detail: newUrl }));
+  }
 };
 
 // Initialize communication when running in iframe
 if (window.parent !== window) {
   console.log('Running in iframe, initializing communication');
   
-  // Send ready message to parent
-  window.parent.postMessage({ 
+  // Immediately notify parent that iframe is ready
+  window.parent.postMessage({
     type: 'IFRAME_READY',
-    payload: { origin: CURRENT_ORIGIN }
+    payload: { 
+      origin: CURRENT_ORIGIN,
+      currentPath: window.location.pathname 
+    }
   }, '*');
-  
+
+  // Listen for messages from parent
   window.addEventListener('message', (event) => {
-    // Validate origin
     if (!isOriginTrusted(event.origin)) {
       console.warn('Message rejected - untrusted origin:', event.origin);
       return;
@@ -55,14 +61,15 @@ if (window.parent !== window) {
     try {
       const { type, payload } = event.data;
       console.log('Received message:', { type, payload });
-      
-      // Handle specific message types
+
       switch(type) {
         case 'PARENT_READY':
           console.log('Parent acknowledged connection');
           break;
         case 'URL_CHANGE':
-          console.log('URL change requested:', payload);
+          if (payload && typeof payload === 'string') {
+            handleUrlChange(payload);
+          }
           break;
         default:
           console.log('Unhandled message type:', type);
@@ -71,9 +78,17 @@ if (window.parent !== window) {
       console.error('Error processing message:', error);
     }
   });
+
+  // Listen for browser navigation events
+  window.addEventListener('popstate', () => {
+    window.parent.postMessage({
+      type: 'URL_CHANGED',
+      payload: { path: window.location.pathname }
+    }, '*');
+  });
 }
 
-// Render application
+// Create root and render application
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

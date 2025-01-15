@@ -8,11 +8,6 @@
     <meta name="author" content="GPT Engineer" />
     <meta property="og:image" content="/og-image.svg" />
     <script>
-      // Remove any time limitations
-      if (typeof SharedArrayBuffer === 'function') {
-        delete SharedArrayBuffer.prototype.byteLength;
-      }
-      
       // Initialize theme
       const getTheme = () => {
         return localStorage.getItem('theme') || 'default';
