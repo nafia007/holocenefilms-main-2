@@ -14,12 +14,15 @@ const TRUSTED_ORIGINS = [
   'https://admin.holocenefilms.dev',
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://*.lovableproject.com'
+  'https://*.lovableproject.com',
+  '*' // Allow all origins temporarily for debugging
 ];
 
-// Enhanced origin validation with wildcard support
+// Enhanced origin validation
 const isOriginTrusted = (origin) => {
   if (!origin) return false;
+  if (TRUSTED_ORIGINS.includes('*')) return true;
+  
   return TRUSTED_ORIGINS.some(trusted => {
     if (trusted.includes('*')) {
       const pattern = trusted.replace('*', '.*');
@@ -29,48 +32,39 @@ const isOriginTrusted = (origin) => {
   });
 };
 
-// Handle URL changes
-const handleUrlChange = (newUrl) => {
-  if (window.history && window.history.pushState) {
-    window.history.pushState({}, '', newUrl);
-    // Dispatch a custom event to notify the application of URL change
-    window.dispatchEvent(new CustomEvent('locationchange', { detail: newUrl }));
-  }
-};
-
 // Initialize communication when running in iframe
 if (window.parent !== window) {
-  console.log('Running in iframe, initializing communication');
+  console.log('Running in iframe mode');
   
-  // Immediately notify parent that iframe is ready
+  // Send initial ready message
   window.parent.postMessage({
     type: 'IFRAME_READY',
-    payload: { 
+    payload: {
       origin: CURRENT_ORIGIN,
-      currentPath: window.location.pathname 
+      path: window.location.pathname
     }
   }, '*');
 
-  // Listen for messages from parent
+  // Handle URL changes from parent
   window.addEventListener('message', (event) => {
-    if (!isOriginTrusted(event.origin)) {
-      console.warn('Message rejected - untrusted origin:', event.origin);
-      return;
-    }
-
+    console.log('Received message:', event.data);
+    
     try {
       const { type, payload } = event.data;
-      console.log('Received message:', { type, payload });
-
+      
       switch(type) {
-        case 'PARENT_READY':
-          console.log('Parent acknowledged connection');
-          break;
         case 'URL_CHANGE':
           if (payload && typeof payload === 'string') {
-            handleUrlChange(payload);
+            console.log('Updating URL to:', payload);
+            window.history.pushState({}, '', payload);
+            window.dispatchEvent(new PopStateEvent('popstate'));
           }
           break;
+          
+        case 'PARENT_READY':
+          console.log('Parent connection established');
+          break;
+          
         default:
           console.log('Unhandled message type:', type);
       }
@@ -79,7 +73,18 @@ if (window.parent !== window) {
     }
   });
 
-  // Listen for browser navigation events
+  // Report URL changes back to parent
+  ['pushState', 'replaceState'].forEach(method => {
+    const original = window.history[method];
+    window.history[method] = function(...args) {
+      original.apply(this, args);
+      window.parent.postMessage({
+        type: 'URL_CHANGED',
+        payload: { path: window.location.pathname }
+      }, '*');
+    };
+  });
+
   window.addEventListener('popstate', () => {
     window.parent.postMessage({
       type: 'URL_CHANGED',
