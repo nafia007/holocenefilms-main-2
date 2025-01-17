@@ -19,8 +19,8 @@ if (window.parent !== window) {
     }
   }, '*');
 
-  let lastUrlChange = 0;
-  const URL_CHANGE_THROTTLE = 100; // Minimum time between URL changes in ms
+  let lastUrlChange = Date.now();
+  const URL_CHANGE_THROTTLE = 300; // Increased minimum time between URL changes in ms
 
   // Handle messages from parent
   window.addEventListener('message', (event) => {
@@ -30,13 +30,15 @@ if (window.parent !== window) {
       
       if (type === 'URL_CHANGE' && payload) {
         const now = Date.now();
-        if (now - lastUrlChange >= URL_CHANGE_THROTTLE) {
+        const timeSinceLastChange = now - lastUrlChange;
+        
+        if (timeSinceLastChange >= URL_CHANGE_THROTTLE) {
           console.log('Updating URL to:', payload);
           window.history.pushState({}, '', payload);
           window.dispatchEvent(new PopStateEvent('popstate'));
           lastUrlChange = now;
         } else {
-          console.log('URL change throttled');
+          console.log(`URL change throttled. Time since last change: ${timeSinceLastChange}ms`);
         }
       }
     } catch (error) {
@@ -44,8 +46,9 @@ if (window.parent !== window) {
     }
   });
 
+  // Simplified URL change notification with minimal debouncing
   let urlChangeTimeout = null;
-  const DEBOUNCE_TIME = 50; // Debounce time in ms
+  const DEBOUNCE_TIME = 250; // Increased debounce time for better stability
 
   function notifyUrlChange() {
     if (urlChangeTimeout) {
@@ -53,10 +56,13 @@ if (window.parent !== window) {
     }
 
     urlChangeTimeout = setTimeout(() => {
+      const currentPath = window.location.pathname;
+      console.log('Notifying parent of URL change:', currentPath);
+      
       window.parent.postMessage({
         type: 'URL_CHANGED',
         payload: {
-          path: window.location.pathname
+          path: currentPath
         }
       }, '*');
     }, DEBOUNCE_TIME);
