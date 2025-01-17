@@ -13,13 +13,14 @@ import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 import MarketInsights from "./pages/MarketInsights";
 
-// Create a new QueryClient instance
+// Create a new QueryClient instance with proper configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
     },
   },
 });
