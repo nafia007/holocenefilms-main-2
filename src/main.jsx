@@ -17,7 +17,7 @@ if (window.parent !== window) {
       origin: CURRENT_ORIGIN,
       path: window.location.pathname
     }
-  }, '*');
+  }, CURRENT_ORIGIN);
 
   let lastUrlChange = Date.now();
   const URL_CHANGE_THROTTLE = 500; // Further increased minimum time between URL changes
@@ -26,6 +26,12 @@ if (window.parent !== window) {
   // Handle messages from parent
   window.addEventListener('message', (event) => {
     try {
+      // Verify the origin of the message
+      if (event.origin !== CURRENT_ORIGIN) {
+        console.warn('Received message from unauthorized origin:', event.origin);
+        return;
+      }
+
       const { type, payload } = event.data;
       console.log('Received message:', { type, payload });
       
@@ -78,7 +84,7 @@ if (window.parent !== window) {
           payload: {
             path: currentPath
           }
-        }, '*');
+        }, CURRENT_ORIGIN);
         
         lastNotifiedPath = currentPath;
       }
