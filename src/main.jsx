@@ -20,7 +20,8 @@ if (window.parent !== window) {
   }, '*');
 
   let lastUrlChange = Date.now();
-  const URL_CHANGE_THROTTLE = 300; // Increased minimum time between URL changes in ms
+  const URL_CHANGE_THROTTLE = 500; // Further increased minimum time between URL changes
+  let isProcessingUrlChange = false;
 
   // Handle messages from parent
   window.addEventListener('message', (event) => {
@@ -28,27 +29,37 @@ if (window.parent !== window) {
       const { type, payload } = event.data;
       console.log('Received message:', { type, payload });
       
-      if (type === 'URL_CHANGE' && payload) {
+      if (type === 'URL_CHANGE' && payload && !isProcessingUrlChange) {
         const now = Date.now();
         const timeSinceLastChange = now - lastUrlChange;
         
         if (timeSinceLastChange >= URL_CHANGE_THROTTLE) {
-          console.log('Updating URL to:', payload);
-          window.history.pushState({}, '', payload);
-          window.dispatchEvent(new PopStateEvent('popstate'));
-          lastUrlChange = now;
+          isProcessingUrlChange = true;
+          console.log('Processing URL update to:', payload);
+          
+          try {
+            window.history.pushState({}, '', payload);
+            window.dispatchEvent(new PopStateEvent('popstate'));
+            lastUrlChange = now;
+          } catch (error) {
+            console.error('Error updating URL:', error);
+          } finally {
+            isProcessingUrlChange = false;
+          }
         } else {
           console.log(`URL change throttled. Time since last change: ${timeSinceLastChange}ms`);
         }
       }
     } catch (error) {
       console.error('Error processing message:', error);
+      isProcessingUrlChange = false;
     }
   });
 
-  // Simplified URL change notification with minimal debouncing
+  // URL change notification with increased stability measures
   let urlChangeTimeout = null;
-  const DEBOUNCE_TIME = 250; // Increased debounce time for better stability
+  const DEBOUNCE_TIME = 400; // Increased debounce time
+  let lastNotifiedPath = null;
 
   function notifyUrlChange() {
     if (urlChangeTimeout) {
@@ -57,14 +68,20 @@ if (window.parent !== window) {
 
     urlChangeTimeout = setTimeout(() => {
       const currentPath = window.location.pathname;
-      console.log('Notifying parent of URL change:', currentPath);
       
-      window.parent.postMessage({
-        type: 'URL_CHANGED',
-        payload: {
-          path: currentPath
-        }
-      }, '*');
+      // Only notify if the path has actually changed
+      if (currentPath !== lastNotifiedPath) {
+        console.log('Notifying parent of URL change:', currentPath);
+        
+        window.parent.postMessage({
+          type: 'URL_CHANGED',
+          payload: {
+            path: currentPath
+          }
+        }, '*');
+        
+        lastNotifiedPath = currentPath;
+      }
     }, DEBOUNCE_TIME);
   }
 
