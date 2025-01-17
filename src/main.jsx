@@ -3,37 +3,32 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-// Get the current origin for dynamic validation
-const CURRENT_ORIGIN = window.location.origin;
-
 // Initialize communication when running in iframe
 if (window.parent !== window) {
   console.log('Running in iframe mode');
   
-  // Send initial ready message
+  // Send initial ready message with more flexible origin handling
   window.parent.postMessage({
     type: 'IFRAME_READY',
     payload: {
-      origin: CURRENT_ORIGIN,
+      origin: window.location.origin,
       path: window.location.pathname
     }
-  }, CURRENT_ORIGIN);
+  }, '*');
 
   let lastUrlChange = Date.now();
-  const URL_CHANGE_THROTTLE = 500; // Further increased minimum time between URL changes
+  const URL_CHANGE_THROTTLE = 500;
   let isProcessingUrlChange = false;
 
   // Handle messages from parent
   window.addEventListener('message', (event) => {
     try {
-      // Verify the origin of the message
-      if (event.origin !== CURRENT_ORIGIN) {
-        console.warn('Received message from unauthorized origin:', event.origin);
-        return;
-      }
-
+      // Log incoming message details for debugging
+      console.log('Received message from origin:', event.origin);
+      console.log('Current origin:', window.location.origin);
+      
       const { type, payload } = event.data;
-      console.log('Received message:', { type, payload });
+      console.log('Processing message:', { type, payload });
       
       if (type === 'URL_CHANGE' && payload && !isProcessingUrlChange) {
         const now = Date.now();
@@ -62,9 +57,9 @@ if (window.parent !== window) {
     }
   });
 
-  // URL change notification with increased stability measures
+  // URL change notification
   let urlChangeTimeout = null;
-  const DEBOUNCE_TIME = 400; // Increased debounce time
+  const DEBOUNCE_TIME = 400;
   let lastNotifiedPath = null;
 
   function notifyUrlChange() {
@@ -75,7 +70,6 @@ if (window.parent !== window) {
     urlChangeTimeout = setTimeout(() => {
       const currentPath = window.location.pathname;
       
-      // Only notify if the path has actually changed
       if (currentPath !== lastNotifiedPath) {
         console.log('Notifying parent of URL change:', currentPath);
         
@@ -84,7 +78,7 @@ if (window.parent !== window) {
           payload: {
             path: currentPath
           }
-        }, CURRENT_ORIGIN);
+        }, '*');
         
         lastNotifiedPath = currentPath;
       }
