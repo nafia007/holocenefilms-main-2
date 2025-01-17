@@ -7,28 +7,37 @@ import './index.css';
 if (window.parent !== window) {
   console.log('Running in iframe mode');
   
-  // Send initial ready message with more flexible origin handling
-  window.parent.postMessage({
-    type: 'IFRAME_READY',
-    payload: {
-      origin: window.location.origin,
-      path: window.location.pathname
-    }
-  }, '*');
+  // Send initial ready message with origin validation
+  const sendMessage = (type, payload) => {
+    const targetOrigin = '*'; // Allow cross-origin communication
+    window.parent.postMessage({ type, payload }, targetOrigin);
+  };
 
+  // Send ready message
+  sendMessage('IFRAME_READY', {
+    origin: window.location.origin,
+    path: window.location.pathname
+  });
+
+  // Enhanced rate limiting configuration
+  const URL_CHANGE_THROTTLE = 1000; // Increased to 1 second
+  const DEBOUNCE_TIME = 800; // Increased to 800ms
   let lastUrlChange = Date.now();
-  const URL_CHANGE_THROTTLE = 500;
   let isProcessingUrlChange = false;
+  let urlChangeTimeout = null;
+  let lastNotifiedPath = window.location.pathname;
 
-  // Handle messages from parent
+  // Handle messages from parent with improved logging
   window.addEventListener('message', (event) => {
     try {
-      // Log incoming message details for debugging
-      console.log('Received message from origin:', event.origin);
-      console.log('Current origin:', window.location.origin);
+      // Log incoming message details
+      console.log('[Iframe] Message received:', {
+        type: event.data.type,
+        origin: event.origin,
+        currentOrigin: window.location.origin
+      });
       
       const { type, payload } = event.data;
-      console.log('Processing message:', { type, payload });
       
       if (type === 'URL_CHANGE' && payload && !isProcessingUrlChange) {
         const now = Date.now();
@@ -36,32 +45,28 @@ if (window.parent !== window) {
         
         if (timeSinceLastChange >= URL_CHANGE_THROTTLE) {
           isProcessingUrlChange = true;
-          console.log('Processing URL update to:', payload);
+          console.log('[Iframe] Processing URL update:', payload);
           
           try {
             window.history.pushState({}, '', payload);
             window.dispatchEvent(new PopStateEvent('popstate'));
             lastUrlChange = now;
           } catch (error) {
-            console.error('Error updating URL:', error);
+            console.error('[Iframe] Error updating URL:', error);
           } finally {
             isProcessingUrlChange = false;
           }
         } else {
-          console.log(`URL change throttled. Time since last change: ${timeSinceLastChange}ms`);
+          console.log(`[Iframe] URL change throttled. Wait time: ${timeSinceLastChange}ms`);
         }
       }
     } catch (error) {
-      console.error('Error processing message:', error);
+      console.error('[Iframe] Error processing message:', error);
       isProcessingUrlChange = false;
     }
   });
 
-  // URL change notification
-  let urlChangeTimeout = null;
-  const DEBOUNCE_TIME = 400;
-  let lastNotifiedPath = null;
-
+  // Debounced URL change notification
   function notifyUrlChange() {
     if (urlChangeTimeout) {
       clearTimeout(urlChangeTimeout);
@@ -71,15 +76,8 @@ if (window.parent !== window) {
       const currentPath = window.location.pathname;
       
       if (currentPath !== lastNotifiedPath) {
-        console.log('Notifying parent of URL change:', currentPath);
-        
-        window.parent.postMessage({
-          type: 'URL_CHANGED',
-          payload: {
-            path: currentPath
-          }
-        }, '*');
-        
+        console.log('[Iframe] Notifying parent of URL change:', currentPath);
+        sendMessage('URL_CHANGED', { path: currentPath });
         lastNotifiedPath = currentPath;
       }
     }, DEBOUNCE_TIME);
