@@ -7,6 +7,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Building2, Coins, FileCheck, Globe, Lock, Scale } from "lucide-react";
 
 const Index = () => {
+  console.log('Index component rendering');
+
   const tokenizationSteps = [
     {
       title: "Defining the Asset",
@@ -62,6 +64,10 @@ const Index = () => {
       description: "Full transparency in fund usage and revenue distribution"
     }
   ];
+
+  React.useEffect(() => {
+    console.log('Index component mounted');
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] via-[#403E43] to-[#221F26] text-white">
