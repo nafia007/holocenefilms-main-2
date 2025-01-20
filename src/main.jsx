@@ -5,52 +5,62 @@ import './index.css';
 
 // Initialize communication when running in iframe
 if (window.parent !== window) {
-  console.log('[Iframe] Running in iframe mode');
+  console.log('[Iframe] Initializing iframe mode');
+  console.log('[Iframe] Current origin:', window.location.origin);
+  console.log('[Iframe] Current path:', window.location.pathname);
   
   // Send initial ready message with origin validation
   const sendMessage = (type, payload) => {
-    const targetOrigin = '*'; // Allow cross-origin communication
-    window.parent.postMessage({ type, payload }, targetOrigin);
+    try {
+      const targetOrigin = '*'; // Allow cross-origin communication
+      window.parent.postMessage({ type, payload }, targetOrigin);
+      console.log('[Iframe] Message sent:', { type, payload });
+    } catch (error) {
+      console.error('[Iframe] Error sending message:', error);
+    }
   };
 
-  // Send ready message
+  // Send ready message immediately
   sendMessage('IFRAME_READY', {
     origin: window.location.origin,
-    path: window.location.pathname
+    path: window.location.pathname,
+    timestamp: Date.now()
   });
 
-  // Enhanced rate limiting configuration
-  const URL_CHANGE_THROTTLE = 1000; // Increased to 1 second
-  const DEBOUNCE_TIME = 800; // Increased to 800ms
+  // Enhanced rate limiting configuration with logging
+  const URL_CHANGE_THROTTLE = 1000; // 1 second
+  const DEBOUNCE_TIME = 800; // 800ms
   let lastUrlChange = Date.now();
   let isProcessingUrlChange = false;
   let urlChangeTimeout = null;
   let lastNotifiedPath = window.location.pathname;
 
-  // Handle messages from parent with improved logging
+  // Handle messages from parent with improved logging and error handling
   window.addEventListener('message', (event) => {
+    console.log('[Iframe] Received message:', event.data);
+    
     try {
-      // Log incoming message details
-      console.log('[Iframe] Message received:', {
-        type: event.data.type,
-        origin: event.origin,
-        currentOrigin: window.location.origin
-      });
-      
       const { type, payload } = event.data;
       
-      if (type === 'URL_CHANGE' && payload && !isProcessingUrlChange) {
+      if (type === 'URL_CHANGE' && payload) {
+        console.log('[Iframe] Processing URL change request:', payload);
+        
+        if (isProcessingUrlChange) {
+          console.log('[Iframe] Already processing a URL change, skipping');
+          return;
+        }
+
         const now = Date.now();
         const timeSinceLastChange = now - lastUrlChange;
         
         if (timeSinceLastChange >= URL_CHANGE_THROTTLE) {
           isProcessingUrlChange = true;
-          console.log('[Iframe] Processing URL update:', payload);
           
           try {
             window.history.pushState({}, '', payload);
             window.dispatchEvent(new PopStateEvent('popstate'));
             lastUrlChange = now;
+            console.log('[Iframe] URL successfully updated to:', payload);
           } catch (error) {
             console.error('[Iframe] Error updating URL:', error);
           } finally {
@@ -66,7 +76,7 @@ if (window.parent !== window) {
     }
   });
 
-  // Debounced URL change notification
+  // Debounced URL change notification with improved logging
   function notifyUrlChange() {
     if (urlChangeTimeout) {
       clearTimeout(urlChangeTimeout);
@@ -77,7 +87,10 @@ if (window.parent !== window) {
       
       if (currentPath !== lastNotifiedPath) {
         console.log('[Iframe] Notifying parent of URL change:', currentPath);
-        sendMessage('URL_CHANGED', { path: currentPath });
+        sendMessage('URL_CHANGED', { 
+          path: currentPath,
+          timestamp: Date.now()
+        });
         lastNotifiedPath = currentPath;
       }
     }, DEBOUNCE_TIME);
@@ -99,7 +112,7 @@ if (window.parent !== window) {
   window.addEventListener('popstate', notifyUrlChange);
 }
 
-// Create root and render application
+// Create root and render application with error boundary
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
