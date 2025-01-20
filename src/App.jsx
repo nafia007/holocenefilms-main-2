@@ -33,8 +33,8 @@ const thirdwebConfig = {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThirdwebProvider {...thirdwebConfig}>
+    <ThirdwebProvider {...thirdwebConfig}>
+      <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster position="top-right" richColors closeButton />
           <BrowserRouter>
@@ -52,8 +52,8 @@ const App = () => {
             </Layout>
           </BrowserRouter>
         </TooltipProvider>
-      </ThirdwebProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ThirdwebProvider>
   );
 };
 
