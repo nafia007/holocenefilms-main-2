@@ -5,7 +5,7 @@ import './index.css';
 
 // Initialize communication when running in iframe
 if (window.parent !== window) {
-  console.log('Running in iframe mode');
+  console.log('[Iframe] Running in iframe mode');
   
   // Send initial ready message with origin validation
   const sendMessage = (type, payload) => {
