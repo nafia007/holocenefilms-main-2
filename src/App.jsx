@@ -29,6 +29,7 @@ const queryClient = new QueryClient({
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
   activeChain: "polygon",
+  queryClient: queryClient, // Pass the queryClient to ThirdWeb
 };
 
 const App = () => {
