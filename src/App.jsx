@@ -15,30 +15,22 @@ import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 import MarketInsights from "./pages/MarketInsights";
 
-// Create a new QueryClient instance with proper configuration and error logging
+// Initialize QueryClient with proper error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: 2,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
-    },
-  },
-  logger: {
-    log: (message) => {
-      console.log('Query Client:', message);
-    },
-    warn: (message) => {
-      console.warn('Query Client Warning:', message);
-    },
-    error: (error) => {
-      console.error('Query Client Error:', error);
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 10 * 60 * 1000,
+      onError: (error) => {
+        console.error('Query error:', error);
+      }
     },
   },
 });
 
-// ThirdWeb client configuration with enhanced error logging
+// ThirdWeb configuration
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
   activeChain: "polygon",
@@ -55,14 +47,20 @@ const LoadingFallback = () => (
 );
 
 const App = () => {
+  // Add error logging for component mounting
+  React.useEffect(() => {
+    console.log('App component mounted');
+    return () => console.log('App component unmounted');
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThirdwebProvider {...thirdwebConfig}>
-        <TooltipProvider>
-          <Toaster position="top-right" richColors closeButton />
-          <BrowserRouter>
-            <Layout>
-              <React.Suspense fallback={<LoadingFallback />}>
+    <React.Suspense fallback={<LoadingFallback />}>
+      <QueryClientProvider client={queryClient}>
+        <ThirdwebProvider {...thirdwebConfig}>
+          <TooltipProvider>
+            <Toaster position="top-right" richColors closeButton />
+            <BrowserRouter>
+              <Layout>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/admin" element={<AdminDashboard />} />
@@ -73,12 +71,12 @@ const App = () => {
                   <Route path="/dex" element={<DexPage />} />
                   <Route path="/market-insights" element={<MarketInsights />} />
                 </Routes>
-              </React.Suspense>
-            </Layout>
-          </BrowserRouter>
-        </TooltipProvider>
-      </ThirdwebProvider>
-    </QueryClientProvider>
+              </Layout>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ThirdwebProvider>
+      </QueryClientProvider>
+    </React.Suspense>
   );
 };
 
