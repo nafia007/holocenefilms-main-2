@@ -120,8 +120,26 @@ if (!container) {
 }
 
 const root = ReactDOM.createRoot(container);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+
+// Wrap the app in error boundary for better error handling
+const ErrorFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] via-[#403E43] to-[#221F26]">
+    <div className="text-white text-center p-4">
+      <h1 className="text-xl font-bold mb-2">Something went wrong</h1>
+      <p>Please try refreshing the page</p>
+    </div>
+  </div>
 );
+
+try {
+  root.render(
+    <React.StrictMode>
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <App />
+      </React.Suspense>
+    </React.StrictMode>
+  );
+} catch (error) {
+  console.error('Failed to render app:', error);
+  root.render(<ErrorFallback />);
+}

@@ -15,10 +15,11 @@ import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 import MarketInsights from "./pages/MarketInsights";
 
+// Initialize QueryClient
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2,
+      retry: false,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
       cacheTime: 10 * 60 * 1000,
@@ -26,6 +27,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// ThirdWeb configuration
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
   activeChain: "polygon",
@@ -40,38 +42,31 @@ const LoadingFallback = () => (
   </div>
 );
 
-const AppContent = () => {
+// Main App component
+const App = () => {
   React.useEffect(() => {
-    console.log('App content mounted');
-    return () => console.log('App content unmounted');
+    console.log('App mounted');
+    return () => console.log('App unmounted');
   }, []);
 
-  return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/dex" element={<DexPage />} />
-        <Route path="/market-insights" element={<MarketInsights />} />
-      </Routes>
-    </Layout>
-  );
-};
-
-const App = () => {
   return (
     <ThirdwebProvider {...thirdwebConfig}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <TooltipProvider>
-            <Toaster position="top-right" richColors closeButton />
-            <React.Suspense fallback={<LoadingFallback />}>
-              <AppContent />
-            </React.Suspense>
+            <Layout>
+              <Toaster position="top-right" richColors closeButton />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/dex" element={<DexPage />} />
+                <Route path="/market-insights" element={<MarketInsights />} />
+              </Routes>
+            </Layout>
           </TooltipProvider>
         </BrowserRouter>
       </QueryClientProvider>
