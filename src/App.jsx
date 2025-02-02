@@ -15,7 +15,6 @@ import Community from "./pages/Community";
 import DexPage from "./pages/DexPage";
 import MarketInsights from "./pages/MarketInsights";
 
-// Initialize QueryClient with proper error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -23,60 +22,60 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
       cacheTime: 10 * 60 * 1000,
-      onError: (error) => {
-        console.error('Query error:', error);
-      }
     },
   },
 });
 
-// ThirdWeb configuration
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
   activeChain: "polygon",
-  queryClient: queryClient,
 };
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] via-[#403E43] to-[#221F26]">
     <div className="flex flex-col items-center space-y-4">
       <Loader className="w-12 h-12 text-purple-500 animate-spin" />
-      <p className="text-purple-300">Loading ArtStyleAI...</p>
+      <p className="text-purple-300">Loading...</p>
     </div>
   </div>
 );
 
-const App = () => {
-  // Add error logging for component mounting
+const AppContent = () => {
   React.useEffect(() => {
-    console.log('App component mounted');
-    return () => console.log('App component unmounted');
+    console.log('App content mounted');
+    return () => console.log('App content unmounted');
   }, []);
 
   return (
-    <React.Suspense fallback={<LoadingFallback />}>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/dex" element={<DexPage />} />
+        <Route path="/market-insights" element={<MarketInsights />} />
+      </Routes>
+    </Layout>
+  );
+};
+
+const App = () => {
+  return (
+    <ThirdwebProvider {...thirdwebConfig}>
       <QueryClientProvider client={queryClient}>
-        <ThirdwebProvider {...thirdwebConfig}>
+        <BrowserRouter>
           <TooltipProvider>
             <Toaster position="top-right" richColors closeButton />
-            <BrowserRouter>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/marketplace" element={<Marketplace />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/community" element={<Community />} />
-                  <Route path="/dex" element={<DexPage />} />
-                  <Route path="/market-insights" element={<MarketInsights />} />
-                </Routes>
-              </Layout>
-            </BrowserRouter>
+            <React.Suspense fallback={<LoadingFallback />}>
+              <AppContent />
+            </React.Suspense>
           </TooltipProvider>
-        </ThirdwebProvider>
+        </BrowserRouter>
       </QueryClientProvider>
-    </React.Suspense>
+    </ThirdwebProvider>
   );
 };
 

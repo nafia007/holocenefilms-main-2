@@ -120,23 +120,8 @@ if (!container) {
 }
 
 const root = ReactDOM.createRoot(container);
-
-// Wrap render in try-catch for better error reporting
-try {
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} catch (error) {
-  console.error('Failed to render app:', error);
-  // Render fallback error UI
-  root.render(
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] via-[#403E43] to-[#221F26]">
-      <div className="text-white text-center p-4">
-        <h1 className="text-xl font-bold mb-2">Something went wrong</h1>
-        <p>Please try refreshing the page</p>
-      </div>
-    </div>
-  );
-}
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
