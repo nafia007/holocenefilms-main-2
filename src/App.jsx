@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -18,6 +18,7 @@ const Community = React.lazy(() => import("./pages/Community"));
 const DexPage = React.lazy(() => import("./pages/DexPage"));
 const MarketInsights = React.lazy(() => import("./pages/MarketInsights"));
 
+// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -54,8 +55,8 @@ const App = () => {
   }, []);
 
   return (
-    <ThirdwebProvider {...thirdwebConfig}>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ThirdwebProvider {...thirdwebConfig}>
         <BrowserRouter>
           <TooltipProvider>
             <Layout>
@@ -108,8 +109,8 @@ const App = () => {
             </Layout>
           </TooltipProvider>
         </BrowserRouter>
-      </QueryClientProvider>
-    </ThirdwebProvider>
+      </ThirdwebProvider>
+    </QueryClientProvider>
   );
 };
 

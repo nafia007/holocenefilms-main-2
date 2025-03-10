@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Search, Filter, SortAsc } from "lucide-react";
 import NFTPurchaseModal from '../components/NFTPurchaseModal';
 import SocialChatAndRating from '../components/SocialChatAndRating';
 import { getThirdwebContract } from '../utils/thirdwebUtils';
-import { ConnectWallet } from "@thirdweb-dev/react";
+import ConnectWallet from '../components/ConnectWallet';
 
 const FilmCard = ({ film, onPurchase, onSelect, onMint }) => (
   <Card className="w-full transition-all hover:shadow-lg">
