@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navigation from './Navigation';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,13 +22,6 @@ const ErrorFallback = ({ error }) => {
 };
 
 const Layout = ({ children }) => {
-  // Remove any time limitations from the window object
-  React.useEffect(() => {
-    if (window.performance) {
-      delete window.performance.timeOrigin;
-    }
-  }, []);
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <div className="min-h-screen flex flex-col">
@@ -41,7 +35,7 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">About Us</h3>
                 <p className="text-gray-400">
-                  Holocene Films IP marketplace is revolutionizing the way filmmakers share and monetize their intellectual property.
+                  ArtStyleAI is revolutionizing the intersection of traditional fine art and artificial intelligence.
                 </p>
               </div>
               <div>
@@ -55,13 +49,13 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Contact</h3>
                 <p className="text-gray-400">
-                  Email: support@holocenefilms.com<br />
-                  Follow us on Twitter @HoloceneFilms
+                  Email: support@artstyleai.com<br />
+                  Follow us on Twitter @ArtStyleAI
                 </p>
               </div>
             </div>
             <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-              <p>&copy; {new Date().getFullYear()} Holocene Films IP marketplace. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} ArtStyleAI. All rights reserved.</p>
             </div>
           </div>
         </footer>
