@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,8 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+const ArtistDashboard = React.lazy(() => import("./pages/ArtistDashboard"));
 const Marketplace = React.lazy(() => import("./pages/Marketplace"));
 const Login = React.lazy(() => import("./pages/Login"));
 const SignUp = React.lazy(() => import("./pages/SignUp"));
@@ -58,44 +61,51 @@ const App = () => {
             <TooltipProvider>
               <Layout>
                 <Toaster position="top-right" richColors closeButton />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/admin" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <AdminDashboard />
-                    </React.Suspense>
-                  } />
-                  <Route path="/marketplace" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <Marketplace />
-                    </React.Suspense>
-                  } />
-                  <Route path="/login" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <Login />
-                    </React.Suspense>
-                  } />
-                  <Route path="/signup" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <SignUp />
-                    </React.Suspense>
-                  } />
-                  <Route path="/community" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <Community />
-                    </React.Suspense>
-                  } />
-                  <Route path="/dex" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <DexPage />
-                    </React.Suspense>
-                  } />
-                  <Route path="/market-insights" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <MarketInsights />
-                    </React.Suspense>
-                  } />
-                </Routes>
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/admin" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <AdminDashboard />
+                      </React.Suspense>
+                    } />
+                    <Route path="/artist" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <ArtistDashboard />
+                      </React.Suspense>
+                    } />
+                    <Route path="/marketplace" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <Marketplace />
+                      </React.Suspense>
+                    } />
+                    <Route path="/login" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <Login />
+                      </React.Suspense>
+                    } />
+                    <Route path="/signup" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <SignUp />
+                      </React.Suspense>
+                    } />
+                    <Route path="/community" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <Community />
+                      </React.Suspense>
+                    } />
+                    <Route path="/dex" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <DexPage />
+                      </React.Suspense>
+                    } />
+                    <Route path="/market-insights" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <MarketInsights />
+                      </React.Suspense>
+                    } />
+                  </Routes>
+                </ErrorBoundary>
               </Layout>
             </TooltipProvider>
           </BrowserRouter>
