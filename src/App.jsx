@@ -4,18 +4,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
-import { Loader } from "lucide-react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import AdminDashboard from "./pages/AdminDashboard";
-import Marketplace from "./pages/Marketplace";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import Community from "./pages/Community";
-import DexPage from "./pages/DexPage";
-import MarketInsights from "./pages/MarketInsights";
 
-// Initialize QueryClient
+const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+const Marketplace = React.lazy(() => import("./pages/Marketplace"));
+const Login = React.lazy(() => import("./pages/Login"));
+const SignUp = React.lazy(() => import("./pages/SignUp"));
+const Community = React.lazy(() => import("./pages/Community"));
+const DexPage = React.lazy(() => import("./pages/DexPage"));
+const MarketInsights = React.lazy(() => import("./pages/MarketInsights"));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,52 +24,84 @@ const queryClient = new QueryClient({
       cacheTime: 10 * 60 * 1000,
     },
   },
+  logger: {
+    log: console.log,
+    warn: console.warn,
+    error: process.env.NODE_ENV === 'development' ? console.error : () => {},
+  },
 });
 
-// ThirdWeb configuration
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
   activeChain: "polygon",
 };
 
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1F2C] via-[#403E43] to-[#221F26]">
-    <div className="flex flex-col items-center space-y-4">
-      <Loader className="w-12 h-12 text-purple-500 animate-spin" />
-      <p className="text-purple-300">Loading...</p>
+const RouteLoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-pulse text-center">
+      <p className="text-purple-500">Loading page...</p>
     </div>
   </div>
 );
 
-// Main App component
 const App = () => {
   React.useEffect(() => {
-    console.log('App mounted');
-    return () => console.log('App unmounted');
+    console.log('App component mounted');
+    return () => console.log('App component unmounted');
   }, []);
 
   return (
-    <ThirdwebProvider {...thirdwebConfig}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <TooltipProvider>
-            <Layout>
-              <Toaster position="top-right" richColors closeButton />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/dex" element={<DexPage />} />
-                <Route path="/market-insights" element={<MarketInsights />} />
-              </Routes>
-            </Layout>
-          </TooltipProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </ThirdwebProvider>
+    <React.Fragment>
+      <ThirdwebProvider {...thirdwebConfig}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <TooltipProvider>
+              <Layout>
+                <Toaster position="top-right" richColors closeButton />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/admin" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <AdminDashboard />
+                    </React.Suspense>
+                  } />
+                  <Route path="/marketplace" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <Marketplace />
+                    </React.Suspense>
+                  } />
+                  <Route path="/login" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <Login />
+                    </React.Suspense>
+                  } />
+                  <Route path="/signup" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <SignUp />
+                    </React.Suspense>
+                  } />
+                  <Route path="/community" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <Community />
+                    </React.Suspense>
+                  } />
+                  <Route path="/dex" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <DexPage />
+                    </React.Suspense>
+                  } />
+                  <Route path="/market-insights" element={
+                    <React.Suspense fallback={<RouteLoadingFallback />}>
+                      <MarketInsights />
+                    </React.Suspense>
+                  } />
+                </Routes>
+              </Layout>
+            </TooltipProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </ThirdwebProvider>
+    </React.Fragment>
   );
 };
 
