@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArtStyleAI</title>
+    <meta name="description" content="Revolutionizing the intersection of traditional fine art and AI" />
+    <meta name="author" content="ArtStyleAI" />
+    <meta property="og:image" content="/og-image.svg" />
+    <script>
+      // Initialize theme
+      const getTheme = () => {
+        return localStorage.getItem('theme') || 'default';
+      };
+      
+      const setTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      };
+
+      // Set initial theme
+      setTheme(getTheme());
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
