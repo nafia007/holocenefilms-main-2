@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+<<<<<<< HEAD
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { ethers } from 'ethers';
 import { useToast } from "@/components/ui/use-toast";
@@ -102,6 +103,18 @@ const NFTPurchaseModal = ({ isOpen, onClose, artStyle }) => {
       default:
         return <Button onClick={handlePurchase}>Confirm Purchase</Button>;
     }
+=======
+
+const NFTPurchaseModal = ({ isOpen, onClose, artStyle }) => {
+  const [walletAddress, setWalletAddress] = useState('');
+
+  const handlePurchase = () => {
+    // Here you would integrate with a blockchain wallet and handle the actual purchase
+    console.log(`Purchasing ${artStyle.title} for ${artStyle.price} crypto`);
+    console.log(`Sending to wallet: ${walletAddress}`);
+    // After successful purchase:
+    onClose();
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
   };
 
   return (
@@ -110,7 +123,11 @@ const NFTPurchaseModal = ({ isOpen, onClose, artStyle }) => {
         <DialogHeader>
           <DialogTitle>Purchase NFT</DialogTitle>
           <DialogDescription>
+<<<<<<< HEAD
             You are about to purchase the art style "{artStyle?.title}" for {artStyle?.price} ETH.
+=======
+            You are about to purchase the art style "{artStyle?.title}" for {artStyle?.price} crypto.
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -123,6 +140,7 @@ const NFTPurchaseModal = ({ isOpen, onClose, artStyle }) => {
               value={walletAddress}
               onChange={(e) => setWalletAddress(e.target.value)}
               className="col-span-3"
+<<<<<<< HEAD
               disabled={transactionStatus === 'processing'}
             />
           </div>
@@ -137,6 +155,14 @@ const NFTPurchaseModal = ({ isOpen, onClose, artStyle }) => {
             Cancel
           </Button>
           {renderPurchaseButton()}
+=======
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button onClick={onClose} variant="outline">Cancel</Button>
+          <Button onClick={handlePurchase}>Confirm Purchase</Button>
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
         </DialogFooter>
       </DialogContent>
     </Dialog>

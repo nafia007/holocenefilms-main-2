@@ -22,4 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 .qodo
+=======
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7

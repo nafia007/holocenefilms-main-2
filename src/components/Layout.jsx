@@ -35,7 +35,11 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">About Us</h3>
                 <p className="text-gray-400">
+<<<<<<< HEAD
                   Holocene Films IP Marketplace is revolutionizing film intellectual property through blockchain technology and digital assets.
+=======
+                  ArtStyleAI is revolutionizing the intersection of traditional fine art and artificial intelligence.
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
                 </p>
               </div>
               <div>
@@ -49,13 +53,22 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Contact</h3>
                 <p className="text-gray-400">
+<<<<<<< HEAD
                   Email: support@holocenefilms.com<br />
                   Follow us on Twitter @HoloceneFilms
+=======
+                  Email: support@artstyleai.com<br />
+                  Follow us on Twitter @ArtStyleAI
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
                 </p>
               </div>
             </div>
             <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
+<<<<<<< HEAD
               <p>&copy; {new Date().getFullYear()} Holocene Films IP Marketplace. All rights reserved.</p>
+=======
+              <p>&copy; {new Date().getFullYear()} ArtStyleAI. All rights reserved.</p>
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
             </div>
           </div>
         </footer>

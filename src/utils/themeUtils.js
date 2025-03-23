@@ -1,6 +1,12 @@
 // Remove time limitations
+<<<<<<< HEAD
 
 // This closing brace appears to be orphaned and should be removed
+=======
+if (typeof process !== 'undefined' && process.env) {
+  delete process.env.NODE_ENV;
+}
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
 
 export const themes = {
   default: {

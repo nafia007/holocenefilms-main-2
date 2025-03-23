@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,6 +83,18 @@ const SignUp = () => {
     } finally {
       setIsLoading(false);
     }
+=======
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Link } from 'react-router-dom';
+
+const SignUp = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Implement sign-up logic
+    console.log('Sign-up submitted');
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
   };
 
   return (
@@ -104,6 +117,7 @@ const SignUp = () => {
           <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
           <Input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••" />
         </div>
+<<<<<<< HEAD
         
         <div className="flex items-center space-x-2">
           <Checkbox 
@@ -169,6 +183,9 @@ const SignUp = () => {
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? "Creating account..." : "Sign Up"}
         </Button>
+=======
+        <Button type="submit" className="w-full">Sign Up</Button>
+>>>>>>> 88b05763e42d677d81c9f87a8b1fe067dc194be7
       </form>
       <p className="mt-4 text-center">
         Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
