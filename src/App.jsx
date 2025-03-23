@@ -3,11 +3,12 @@ import React from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const ArtistDashboard = React.lazy(() => import("./pages/ArtistDashboard"));
@@ -23,20 +24,22 @@ const queryClient = new QueryClient({
     queries: {
       retry: false,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
-      cacheTime: 10 * 60 * 1000,
+      staleTime: 0, // Set to 0 to always refetch data
+      cacheTime: 1 * 60 * 1000, // Reduced to 1 minute
     },
   },
   logger: {
     log: console.log,
     warn: console.warn,
-    error: process.env.NODE_ENV === 'development' ? console.error : () => {},
+    error: import.meta.env.MODE === 'development' ? console.error : () => {},
   },
 });
 
+import { Polygon } from "@thirdweb-dev/chains";
+
 const thirdwebConfig = {
   clientId: "61c6a87659a28faeff906ed86e7ab9cb",
-  activeChain: "polygon",
+  activeChain: Polygon,
 };
 
 const RouteLoadingFallback = () => (
@@ -46,6 +49,22 @@ const RouteLoadingFallback = () => (
     </div>
   </div>
 );
+
+// Protected route component
+const ProtectedAdminRoute = ({ children }) => {
+  // Move the hook call inside the function body
+  const { user, isAdmin } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (!isAdmin()) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return children;
+};
 
 const App = () => {
   React.useEffect(() => {
@@ -57,17 +76,20 @@ const App = () => {
     <ThirdwebProvider {...thirdwebConfig}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TooltipProvider>
-            <Layout>
-              <Toaster position="top-right" richColors closeButton />
-              <ErrorBoundary>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/admin" element={
-                    <React.Suspense fallback={<RouteLoadingFallback />}>
-                      <AdminDashboard />
-                    </React.Suspense>
-                  } />
+          <AuthProvider>
+            <TooltipProvider>
+              <Layout>
+                <Toaster position="top-right" richColors closeButton />
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/admin" element={
+                      <React.Suspense fallback={<RouteLoadingFallback />}>
+                        <ProtectedAdminRoute>
+                          <AdminDashboard />
+                        </ProtectedAdminRoute>
+                      </React.Suspense>
+                    } />
                   <Route path="/artist" element={
                     <React.Suspense fallback={<RouteLoadingFallback />}>
                       <ArtistDashboard />
@@ -107,6 +129,7 @@ const App = () => {
               </ErrorBoundary>
             </Layout>
           </TooltipProvider>
+          </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </ThirdwebProvider>

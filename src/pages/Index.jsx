@@ -78,7 +78,6 @@ const Index = () => {
             Welcome to Holocene Films IP marketplace
           </h1>
           <p className="text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
-            Revolutionizing film financing through blockchain technology and IP tokenization. 
             Transform your film's intellectual property into digital assets, enabling new ways 
             of fundraising and investment management.
           </p>

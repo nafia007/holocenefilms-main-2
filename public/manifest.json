@@ -1,0 +1,20 @@
+{
+  "name": "Holocene Films",
+  "short_name": "Holocene",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/og-image.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1A1F2C",
+  "background_color": "#403E43"
+}

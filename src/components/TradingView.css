@@ -1,0 +1,30 @@
+.tradingview-widget-container {
+  height: 100%;
+  width: 100%;
+  min-height: 500px;
+  background: #1A1F2C;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tradingview-widget-container iframe {
+  height: 100%;
+  width: 100%;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Fix for TradingView widget loading issues */
+.tradingview-widget-container div {
+  height: 100%;
+}
+
+/* Ensure proper sizing for different chart types */
+.tradingview-widget-container.area-chart,
+.tradingview-widget-container.line-chart,
+.tradingview-widget-container.bar-chart {
+  min-height: 400px;
+}

@@ -6,6 +6,7 @@ import { resolve } from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
+  envPrefix: 'VITE_',
   server: {
     host: "::",
     port: "8080",

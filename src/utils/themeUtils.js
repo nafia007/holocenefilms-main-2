@@ -1,7 +1,6 @@
 // Remove time limitations
-if (typeof process !== 'undefined' && process.env) {
-  delete process.env.NODE_ENV;
-}
+
+// This closing brace appears to be orphaned and should be removed
 
 export const themes = {
   default: {

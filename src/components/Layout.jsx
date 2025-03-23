@@ -35,7 +35,7 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">About Us</h3>
                 <p className="text-gray-400">
-                  ArtStyleAI is revolutionizing the intersection of traditional fine art and artificial intelligence.
+                  Holocene Films IP Marketplace is revolutionizing film intellectual property through blockchain technology and digital assets.
                 </p>
               </div>
               <div>
@@ -49,13 +49,13 @@ const Layout = ({ children }) => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Contact</h3>
                 <p className="text-gray-400">
-                  Email: support@artstyleai.com<br />
-                  Follow us on Twitter @ArtStyleAI
+                  Email: support@holocenefilms.com<br />
+                  Follow us on Twitter @HoloceneFilms
                 </p>
               </div>
             </div>
             <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-              <p>&copy; {new Date().getFullYear()} ArtStyleAI. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} Holocene Films IP Marketplace. All rights reserved.</p>
             </div>
           </div>
         </footer>
