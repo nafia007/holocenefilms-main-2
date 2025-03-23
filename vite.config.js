@@ -3,18 +3,24 @@ import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
-import { componentTagger } from "lovable-tagger";
+import { dirname } from 'path';
+import { fileURLToPath as urlToFile } from 'url';
 
-export default defineConfig(({ mode }) => ({
+const __filename = urlToFile(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default defineConfig(() => ({
   envPrefix: 'VITE_',
   server: {
     host: "::",
     port: "8080",
+    hmr: {
+      clientPort: 8080,
+    },
   },
   plugins: [
     react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean),
+  ],
   resolve: {
     alias: [
       {
@@ -39,9 +45,6 @@ export default defineConfig(({ mode }) => ({
     // Increase memory limit
     chunkSizeWarningLimit: 1000,
     // Handle browser compatibility
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
   },
   optimizeDeps: {
     exclude: ['ox'], // Exclude problematic package from optimization
